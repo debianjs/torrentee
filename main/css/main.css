@@ -6,6 +6,14 @@
     font-style: normal;
 }
 
+:root{
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --muted:#666;
+    --accent:#ff577f; /* color llamativo */
+    --accent-2:#6a5cff;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -14,19 +22,20 @@
 
 body {
     font-family: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f5f5f5;
-    color: #1a1a1a;
+    background: linear-gradient(180deg,var(--bg),#fff);
+    color: #111;
     line-height: 1.6;
 }
 
 /* Navbar */
 .navbar {
-    background: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    color: #fff;
+    border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(106,92,255,0.12);
 }
 
 .navbar-container {
@@ -50,9 +59,9 @@ body {
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: #000;
+    color: #fff;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .navbar-brand svg {
@@ -62,18 +71,19 @@ body {
 .search-bar {
     display: flex;
     align-items: center;
-    background: #f5f5f5;
+    background: rgba(255,255,255,0.12);
     padding: 0.5rem 1rem;
     border-radius: 24px;
     gap: 0.5rem;
     flex: 1;
     max-width: 500px;
     transition: all 0.3s ease;
+    color: #fff;
 }
 
 .search-bar:focus-within {
-    background: #fff;
-    box-shadow: 0 0 0 2px #000;
+    background: rgba(255,255,255,0.18);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
 .search-bar svg {
@@ -106,14 +116,14 @@ body {
 }
 
 .icon-btn:hover {
-    background: #f5f5f5;
+    background: rgba(255,255,255,0.08);
 }
 
 .badge {
     position: absolute;
     top: 0;
     right: 0;
-    background: #000;
+    background: var(--accent-2);
     color: #fff;
     font-size: 0.7rem;
     padding: 0.15rem 0.4rem;
@@ -211,10 +221,10 @@ body {
 }
 
 .sidebar-left {
-    background: #fff;
+    background: linear-gradient(180deg, #fff, #fbfbff);
     border-radius: 16px;
     padding: 1.5rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .sidebar-nav {
@@ -256,10 +266,11 @@ body {
 
 /* Content */
 .content {
-    background: #fff;
+    background: linear-gradient(180deg,#fff,#fcfcff);
     border-radius: 16px;
     padding: 2rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 8px 30px rgba(16,24,40,0.04);
 }
 
 .content-header {
@@ -295,9 +306,9 @@ body {
 }
 
 .filter-tab.active {
-    color: #000;
-    border-bottom-color: #000;
-    font-weight: 500;
+    color: var(--accent-2);
+    border-bottom-color: var(--accent-2);
+    font-weight: 700;
 }
 
 /* Posts */
@@ -318,8 +329,8 @@ body {
 }
 
 .post-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(106,92,255,0.12);
+    transform: translateY(-6px) scale(1.01);
 }
 
 .post-header {
@@ -488,19 +499,20 @@ body {
 }
 
 .follow-btn {
-    background: #000;
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
     color: #fff;
     border: none;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
     cursor: pointer;
     font-family: 'Product Sans', sans-serif;
-    transition: background 0.3s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 8px 30px rgba(106,92,255,0.12);
 }
 
 .follow-btn:hover {
-    background: #333;
+    transform: translateY(-3px) scale(1.02);
 }
 
 .stats {
@@ -532,23 +544,22 @@ body {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    width: 60px;
-    height: 60px;
-    background: #000;
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
     color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: 0 12px 40px rgba(106,92,255,0.18);
+    transition: transform 0.18s ease;
     z-index: 999;
 }
 
 .fab:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    transform: translateY(-6px) scale(1.05);
 }
 
 /* Loading Spinner */

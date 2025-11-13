@@ -40,8 +40,11 @@
                 <textarea id="content" name="content" rows="6" required style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:8px;margin-top:0.5rem;"></textarea>
             </div>
             <div style="margin:1rem 0;">
-                <label for="imageUrl">Imagen (URL opcional)</label>
-                <input id="imageUrl" name="imageUrl" type="text" placeholder="https://..." style="width:100%;padding:0.5rem;border:1px solid #e0e0e0;border-radius:8px;margin-top:0.5rem;">
+                <label for="postImageFile">Imagen (archivo opcional)</label>
+                <input id="postImageFile" name="postImageFile" type="file" accept="image/*" style="width:100%;padding:0.25rem;border:1px solid #e0e0e0;border-radius:8px;margin-top:0.5rem;">
+                <div id="postImagePreview" style="margin-top:0.75rem;">
+                    <img id="postImagePreviewImg" src="" alt="preview" style="max-width:100%;border-radius:8px;display:none;">
+                </div>
             </div>
             <div style="display:flex;gap:1rem;align-items:center;margin-top:1rem;">
                 <button type="submit" class="follow-btn">Publicar</button>

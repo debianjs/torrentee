@@ -3,16 +3,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Si estamos en la página de crear post
     const createForm = document.getElementById('createPostForm');
     if (createForm) {
+        // Preview imagen de post al seleccionarla
+        const postImageFileInput = document.getElementById('postImageFile');
+        const postImagePreviewImg = document.getElementById('postImagePreviewImg');
+        if (postImageFileInput) {
+            postImageFileInput.addEventListener('change', () => {
+                const f = postImageFileInput.files[0];
+                if (!f) {
+                    postImagePreviewImg.style.display = 'none';
+                    return;
+                }
+                const fr = new FileReader();
+                fr.onload = (ev) => {
+                    postImagePreviewImg.src = ev.target.result;
+                    postImagePreviewImg.style.display = 'block';
+                };
+                fr.readAsDataURL(f);
+            });
+        }
         createForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!checkAuth()) return;
             const title = document.getElementById('title').value.trim();
             const content = document.getElementById('content').value.trim();
-            const imageUrl = document.getElementById('imageUrl').value.trim() || null;
+            const imageFileInput = document.getElementById('postImageFile');
+            const imageFile = imageFileInput && imageFileInput.files && imageFileInput.files[0] ? imageFileInput.files[0] : null;
+            let imageUrl = null;
             const status = document.getElementById('statusMessage');
             status.textContent = 'Publicando...';
 
             try {
+                if (imageFile) {
+                    status.textContent = 'Subiendo imagen...';
+                    const uploaded = await uploadToImgbb(imageFile);
+                    if (uploaded && uploaded.data && uploaded.data.url) imageUrl = uploaded.data.url;
+                }
+
                 const { data, error } = await supabase
                     .from('posts')
                     .insert([{ title, content, image_url: imageUrl, user_id: currentUser.id }]);
@@ -122,5 +148,29 @@ async function loadPost(postId) {
     } catch (error) {
         console.error('Error cargando post:', error);
         container.innerHTML = '<p>Error al cargar el post.</p>';
+    }
+}
+
+async function uploadToImgbb(file) {
+    try {
+        const base64 = await new Promise((resolve, reject) => {
+            const fr = new FileReader();
+            fr.onload = () => resolve(fr.result.split(',')[1]);
+            fr.onerror = reject;
+            fr.readAsDataURL(file);
+        });
+
+        const key = 'a829ef97aa2f2e24d7871d6b3ef0b52e';
+        const form = new FormData();
+        form.append('image', base64);
+
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {
+            method: 'POST',
+            body: form
+        });
+        return await res.json();
+    } catch (err) {
+        console.error('Error subiendo a imgbb', err);
+        return null;
     }
 }
