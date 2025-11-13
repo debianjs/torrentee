@@ -1,0 +1,21 @@
+/* Estilos para la página de configuración */
+.settings-form {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.settings-form label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #333;
+}
+
+.settings-form input, .settings-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: inherit;
+}

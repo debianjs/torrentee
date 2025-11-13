@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Comunidad</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="../index.html" class="navbar-brand">&larr; Comunidad</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content" style="max-width:1000px;margin:2rem auto;">
+        <div class="profile-header">
+            <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff" alt="Avatar" class="profile-avatar">
+            <div class="profile-info">
+                <h2 id="profileUsername">@usuario</h2>
+                <p id="profileBio">Bio del usuario...</p>
+                <div class="profile-stats">
+                    <div><strong id="profilePostsCount">0</strong><span> Posts</span></div>
+                    <div><strong id="profileFollowersCount">0</strong><span> Seguidores</span></div>
+                    <div><strong id="profileFollowingCount">0</strong><span> Siguiendo</span></div>
+                </div>
+            </div>
+        </div>
+
+        <section style="margin-top:1.5rem;">
+            <h3>Posts</h3>
+            <div id="profilePosts" class="posts-container">
+                <div class="loading-spinner">
+                    <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+                    <p>Cargando posts...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/profile.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Comunidad</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="../index.html" class="navbar-brand">&larr; Comunidad</a>
+            </div>
+            <div class="navbar-right">
+                <a href="../settings/index.html" class="btn">Editar Perfil</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content" style="max-width:1000px;margin:2rem auto;">
+        <section id="profileHeader" style="display:flex;gap:1.5rem;align-items:center;">
+            <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff" alt="Avatar" style="width:120px;height:120px;border-radius:12px;object-fit:cover;">
+            <div>
+                <h2 id="profileName">Usuario</h2>
+                <p id="profileBio" style="color:#666;">Bio del usuario...</p>
+                <div style="margin-top:0.5rem;color:#666;">Posts: <span id="profilePostsCount">0</span></div>
+            </div>
+        </section>
+
+        <section style="margin-top:2rem;">
+            <h3>Publicaciones</h3>
+            <div id="userPosts" style="margin-top:1rem;"></div>
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/profile.js"></script>
+</body>
+</html>

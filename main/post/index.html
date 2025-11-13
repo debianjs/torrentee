@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post | Comunidad</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/post.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="../index.html" class="navbar-brand">&larr; Comunidad</a>
+            </div>
+            <div class="navbar-right">
+                <a href="../create-post/index.html" class="btn">Crear Post</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content" style="max-width:900px;margin:2rem auto;">
+        <div id="postContainer">
+            <div class="loading-spinner">
+                <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+                <p>Cargando post...</p>
+            </div>
+        </div>
+
+        <section id="repliesSection" style="margin-top:2rem;">
+            <h3>Respuestas</h3>
+            <div id="repliesList"></div>
+
+            <div style="margin-top:1rem;">
+                <textarea id="replyContent" rows="4" placeholder="Escribe una respuesta..." style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:8px"></textarea>
+                <div style="margin-top:0.5rem;display:flex;gap:1rem;">
+                    <button id="replyBtn" class="follow-btn">Responder</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/post.js"></script>
+</body>
+</html>

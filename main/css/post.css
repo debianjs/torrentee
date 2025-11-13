@@ -1,0 +1,31 @@
+/* Estilos específicos para vistas de post */
+.post-detail {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: #fff;
+}
+
+.post-detail h2 {
+    margin-bottom: 0.5rem;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+#repliesList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.reply-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    padding: 0.75rem;
+    border-radius: 8px;
+}
