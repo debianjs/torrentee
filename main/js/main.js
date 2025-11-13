@@ -1,7 +1,12 @@
 // Configuración de Supabase
 const SUPABASE_URL = 'https://mudktareaneenqkptcyn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11ZGt0YXJlYW5lZW5xa3B0Y3luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMTA0NTIsImV4cCI6MjA3Mzg4NjQ1Mn0.5FtKPMIdH0byoXV7c-_x7-G9XmX5K5074Zhi0DIyMRc';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabase = null;
+if (window && window.supabase && typeof window.supabase.createClient === 'function') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} else {
+    console.error('Supabase JS no está cargado. Asegúrate de incluir el script CDN antes de main.js');
+}
 
 // Variables globales
 let currentUser = null;
@@ -22,13 +27,25 @@ function checkAuth() {
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
     if (!checkAuth()) return;
-    
+    // Cargar datos sólo si los contenedores existen en la página actual
     await loadUserData();
-    await loadPosts();
-    await loadTrendingTopics();
-    await loadSuggestedUsers();
-    await loadStats();
-    
+
+    if (document.getElementById('postsContainer')) {
+        await loadPosts();
+    }
+
+    if (document.getElementById('trendingTopics')) {
+        await loadTrendingTopics();
+    }
+
+    if (document.getElementById('suggestedUsers')) {
+        await loadSuggestedUsers();
+    }
+
+    if (document.getElementById('totalPosts')) {
+        await loadStats();
+    }
+
     initializeEventListeners();
 });
 
@@ -43,7 +60,8 @@ async function loadUserData() {
         
         if (data) {
             const avatar = data.avatar_url || `https://ui-avatars.com/api/?name=${data.username}&background=000&color=fff`;
-            document.getElementById('navbarAvatar').src = avatar;
+            const navAvatar = document.getElementById('navbarAvatar');
+            if (navAvatar) navAvatar.src = avatar;
         }
     } catch (error) {
         console.error('Error loading user data:', error);
@@ -250,24 +268,28 @@ async function loadStats() {
 
 // Initialize event listeners
 function initializeEventListeners() {
-    // User menu dropdown
+    // User menu dropdown (proteger si los elementos no existen en la página)
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
-    userMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        userDropdown.classList.toggle('show');
-    });
-    
-    document.addEventListener('click', () => {
-        userDropdown.classList.remove('show');
-    });
-    
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('user');
-        window.location.href = '../auth/sign-in/index.html';
-    });
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            userDropdown.classList.remove('show');
+        });
+    }
+
+    // Logout (proteger si existe)
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('user');
+            window.location.href = '../auth/sign-in/index.html';
+        });
+    }
     
     // Filter tabs
     document.querySelectorAll('.filter-tab').forEach(tab => {
@@ -281,22 +303,24 @@ function initializeEventListeners() {
     
     // Search
     const searchInput = document.getElementById('searchInput');
-    let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const query = e.target.value.toLowerCase();
-            if (query) {
-                const filtered = allPosts.filter(post => 
-                    post.title.toLowerCase().includes(query) || 
-                    post.content.toLowerCase().includes(query)
-                );
-                renderPosts(filtered);
-            } else {
-                renderPosts(allPosts);
-            }
-        }, 300);
-    });
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value.toLowerCase();
+                if (query) {
+                    const filtered = allPosts.filter(post => 
+                        post.title.toLowerCase().includes(query) || 
+                        post.content.toLowerCase().includes(query)
+                    );
+                    renderPosts(filtered);
+                } else {
+                    renderPosts(allPosts);
+                }
+            }, 300);
+        });
+    }
 }
 
 // Utility functions
