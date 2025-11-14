@@ -39,16 +39,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (uploaded && uploaded.data && uploaded.data.url) imageUrl = uploaded.data.url;
                 }
 
-                const { data, error } = await supabase
-                    .from('posts')
-                    .insert([{ title, content, image_url: imageUrl, user_id: currentUser.id }]);
+                // Intentar insertar incluyendo image_url; si la columna no existe, reintentar sin ella
+                let result;
+                try {
+                    result = await supabase
+                        .from('posts')
+                        .insert([{ title, content, image_url: imageUrl, user_id: currentUser.id }]);
+                } catch (e) {
+                    // Algunos errores de la librería vienen aquí
+                    console.error('Error durante insert (primero):', e);
+                    throw e;
+                }
 
-                if (error) throw error;
+                // Manejar respuesta / error de PostgREST
+                if (result && result.error) {
+                    // Si la columna image_url no existe, reintentar sin esa columna
+                    const msg = (result.error && result.error.message) || '';
+                    if (msg.includes("Could not find the 'image_url' column")) {
+                        console.warn('La columna image_url no existe en la tabla posts; reintentando sin image_url');
+                        const { data: data2, error: error2 } = await supabase
+                            .from('posts')
+                            .insert([{ title, content, user_id: currentUser.id }]);
+                        if (error2) throw error2;
+                    } else {
+                        throw result.error;
+                    }
+                }
                 status.textContent = 'Publicado correctamente.';
                 setTimeout(() => window.location.href = '../index.html', 900);
             } catch (err) {
-                console.error(err);
-                status.textContent = 'Error al publicar.';
+                console.error('Error creando post:', err);
+                // Si fue un problema de red / DNS o CORS, intentar dar feedback útil
+                if (err && err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('ERR_NAME_NOT_RESOLVED'))) {
+                    status.textContent = 'Error de red: no se pudo conectar a Supabase. Verifica la URL y tu conexión.';
+                } else if (err && err.code === 'PGRST204') {
+                    status.textContent = 'Error en la API: columna inexistente. Revisa el esquema de la tabla posts.';
+                } else {
+                    status.textContent = 'Error al publicar. Revisa la consola para más detalles.';
+                }
             }
         });
     }
