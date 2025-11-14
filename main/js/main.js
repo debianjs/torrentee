@@ -362,11 +362,73 @@ function escapeHtml(text) {
 }
 
 async function toggleLike(postId) {
-    // Implement like functionality
-    console.log('Toggle like for post:', postId);
+    if (!checkAuth()) return;
+    try {
+        // Verificar si ya existe like
+        const { data: existing, error: err1 } = await supabase
+            .from('likes')
+            .select('id')
+            .eq('post_id', postId)
+            .eq('user_id', currentUser.id)
+            .limit(1)
+            .single();
+
+        if (err1 && err1.code !== 'PGRST116') {
+            console.error('Error checking like:', err1);
+        }
+
+        if (existing && existing.id) {
+            // Ya liked -> eliminar
+            const { error } = await supabase.from('likes').delete().eq('id', existing.id);
+            if (error) throw error;
+        } else {
+            // Insertar like
+            const { error } = await supabase.from('likes').insert([{ post_id: postId, user_id: currentUser.id }]);
+            if (error) throw error;
+        }
+
+        // Refrescar posts para actualizar contadores/estado
+        if (document.getElementById('postsContainer')) await loadPosts(currentFilter);
+        // Si estamos viendo un post individual, recargarlo
+        const postContainer = document.getElementById('postContainer');
+        if (postContainer) {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) await loadPost(id);
+        }
+    } catch (err) {
+        console.error('Error toggling like:', err);
+    }
 }
 
 async function followUser(userId) {
-    // Implement follow functionality
-    console.log('Follow user:', userId);
+    if (!checkAuth()) return;
+    try {
+        // revisar si ya sigue
+        const { data: existing, error: err1 } = await supabase
+            .from('followers')
+            .select('id')
+            .eq('follower_id', currentUser.id)
+            .eq('following_id', userId)
+            .limit(1)
+            .single();
+
+        if (err1 && err1.code !== 'PGRST116') {
+            console.error('Error checking follow:', err1);
+        }
+
+        if (existing && existing.id) {
+            // ya sigue -> unfollow
+            const { error } = await supabase.from('followers').delete().eq('id', existing.id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('followers').insert([{ follower_id: currentUser.id, following_id: userId }]);
+            if (error) throw error;
+        }
+
+        // refrescar suggested users
+        if (document.getElementById('suggestedUsers')) await loadSuggestedUsers();
+    } catch (err) {
+        console.error('Error toggling follow:', err);
+    }
 }
